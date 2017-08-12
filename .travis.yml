@@ -1,0 +1,26 @@
+language: java
+jdk:
+- oraclejdk8
+cache:
+  directories:
+  - $HOME/.m2
+sudo: required
+services:
+- docker
+notifications:
+  email:
+  - bilalwahla@gmail.com
+  on_success: always
+  on_failure: always
+branches:
+  only:
+  - master
+env:
+  global:
+before_install:
+- gem install travis -v 1.8.8 --no-rdoc --no-ri
+- export BUILD_NAME=fhrs-$TRAVIS_BRANCH-$(date -u "+%Y%m%d%H%M%S")-$TRAVIS_BUILD_NUMBER
+script:
+- sh travis_scripts/tag_build.sh
+- sh travis_scripts/build_services.sh
+- sh travis_scripts/deploy_to_docker_hub.sh

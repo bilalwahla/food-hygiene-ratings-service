@@ -1,0 +1,16 @@
+logging:
+  level:
+    com.df: DEBUG
+    org.springframework: WARN
+fhrs:
+  api:
+    protocol: http
+    host: api.ratings.food.gov.uk
+    version: 2
+    path:
+      authorities:
+        basic: /Authorities/basic
+      ratings: /Ratings
+      establishments:
+        search:
+          authority: /Establishments?localAuthorityId={localAuthorityId}&pageSize=0
