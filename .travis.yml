@@ -1,4 +1,4 @@
-language: java
+language: groovy
 jdk:
 - oraclejdk8
 cache:
@@ -27,3 +27,5 @@ script:
 - sh travis_scripts/build_services.sh
 - sh travis_scripts/tag_build.sh
 - sh travis_scripts/deploy_to_docker_hub.sh
+after_success:
+- bash <(curl -s https://codecov.io/bash)
