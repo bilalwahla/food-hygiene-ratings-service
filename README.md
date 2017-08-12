@@ -2,8 +2,6 @@
 
 # Food Hygiene Ratings Service
 
-NOTE: if you have received similar work as part of job interview  process for a developer role, beware that this work (done in 5-6 hours) might be considered "technically not strong enough" to get you the job.
-
 The project consists of only one microservice.
 
 1.  food-hygiene-ratings-service that allows you to see how food hygiene ratings are distributed by percentage across a selected Local Authority so that you can understand the profile of establishments in that authority.
