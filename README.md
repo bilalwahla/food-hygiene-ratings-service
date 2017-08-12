@@ -1,6 +1,6 @@
-# Food Hygiene Ratings Service
+[![Build Status](https://travis-ci.org/bilalwahla/food-hygiene-ratings-service.svg?branch=master)](https://travis-ci.org/bilalwahla/food-hygiene-ratings-service)
 
-NOTE: if you have received similar work as part of job interview  process for a developer role, beware that this work (done in 5-6 hours) might be considered "technically not strong enough" to get you the job.
+# Food Hygiene Ratings Service
 
 The project consists of only one microservice.
 
