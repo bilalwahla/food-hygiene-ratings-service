@@ -7,8 +7,7 @@ The project consists of only one microservice.
 1.  food-hygiene-ratings-service that allows you to see how food hygiene ratings are distributed by percentage across a selected Local Authority so that you can understand the profile of establishments in that authority.
 
 # Software needed to manually build and run
-1.  [Apache Maven] (http://maven.apache.org).
-2.  [Docker] (http://docker.com).
+1.  [Docker] (http://docker.com).
 
 ## Manually building the Docker Image
 To build the project as a docker image, open a command-line window change to the directory where you have downloaded the project source code.
