@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/bilalwahla/food-hygiene-ratings-service.svg?branch=master)](https://travis-ci.org/bilalwahla/food-hygiene-ratings-service)
+[![Build Status](https://travis-ci.org/bilalwahla/food-hygiene-ratings-service.svg?branch=master)](https://travis-ci.org/bilalwahla/food-hygiene-ratings-service) [![codecov](https://codecov.io/gh/bilalwahla/food-hygiene-ratings-service/branch/master/graph/badge.svg)](https://codecov.io/gh/bilalwahla/food-hygiene-ratings-service)
 
 # Food Hygiene Ratings Service
 
