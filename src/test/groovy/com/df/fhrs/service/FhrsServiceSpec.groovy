@@ -163,6 +163,7 @@ class FhrsServiceSpec extends Specification {
         ] as Establishments,
         OK
     )
-    thrown NoEstablishmentFoundException
+    NoEstablishmentFoundException noEstablishmentFoundException = thrown()
+    noEstablishmentFoundException.message.contains(unknownAuthorityId.toString())
   }
 }
