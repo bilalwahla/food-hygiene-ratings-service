@@ -101,7 +101,7 @@
     <start-class>com.df.fhrs.FoodHygieneRatingsServiceApplication</start-class>
     <!-- Need to include the namespace for Docker Hub to associate it with docker account -->
     <docker.image.name>bilalwahla/df-fhrs</docker.image.name>
-    <docker.image.tag>${env.BUILD_NAME}</docker.image.tag>
+    <docker.image.tag>exercise</docker.image.tag>
   </properties>
 
   <build>
@@ -157,14 +157,8 @@
         <executions>
           <execution>
             <goals>
-              <goal>addSources</goal>
-              <goal>addTestSources</goal>
-              <goal>generateStubs</goal>
               <goal>compile</goal>
-              <goal>testGenerateStubs</goal>
               <goal>testCompile</goal>
-              <goal>removeStubs</goal>
-              <goal>removeTestStubs</goal>
             </goals>
           </execution>
         </executions>

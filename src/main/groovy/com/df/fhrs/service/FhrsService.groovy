@@ -64,9 +64,9 @@ class FhrsService {
     HttpEntity<?> requestEntity = new HttpEntity<Object>(fhrsHeadersFactory.headers)
     URI requestUri = uriManipulation.createFhrsRequestUri fhrsProperties.basicAuthoritiesPath
 
-    log.debug "Calling FHRS API to retrieve basic authorities at ${requestUri.toString()}"
+    log.debug 'Calling FHRS API to retrieve basic authorities at ' + requestUri.toString()
     ResponseEntity<Authorities> fhrsResponse = restTemplate.exchange requestUri, GET, requestEntity, Authorities
-    log.debug "FHRS response for retrieving basic authorities is ${fhrsResponse.statusCodeValue}"
+    log.debug 'FHRS response for retrieving basic authorities is ' + fhrsResponse.statusCodeValue
 
     if (fhrsResponse?.statusCode != OK) fhrsResponse
 
@@ -81,9 +81,9 @@ class FhrsService {
     HttpEntity<?> requestEntity = new HttpEntity<Object>(fhrsHeadersFactory.headers)
     URI requestUri = uriManipulation.createFhrsRequestUri fhrsProperties.ratingsPath
 
-    log.debug "Calling FHRS API to retrieve ratings at ${requestUri.toString()}"
+    log.debug 'Calling FHRS API to retrieve ratings at' + requestUri.toString()
     ResponseEntity<Ratings> fhrsResponse = restTemplate.exchange requestUri, GET, requestEntity, Ratings
-    log.debug "FHRS response for retrieving ratings is ${fhrsResponse.statusCodeValue}"
+    log.debug 'FHRS response for retrieving ratings is' + fhrsResponse.statusCodeValue
 
     if (fhrsResponse?.statusCode != OK) fhrsResponse
 
@@ -101,9 +101,9 @@ class FhrsService {
     String searchPath = uriManipulation.populateSearchEstablishmentsByAuthorityPath localAuthorityId
     URI requestUri = uriManipulation.createFhrsRequestUri searchPath
 
-    log.debug "Calling FHRS API to retrieve establishments by authority $localAuthorityId at ${requestUri.toString()}"
+    log.debug 'Calling FHRS API to retrieve establishments by authority' + localAuthorityId + ' at ' + requestUri.toString()
     ResponseEntity<Establishments> fhrsResponse = restTemplate.exchange requestUri, GET, requestEntity, Establishments
-    log.debug "FHRS response to retrieving establishments by authority $localAuthorityId is ${fhrsResponse.statusCodeValue}"
+    log.debug 'FHRS response to retrieving establishments by authority' + localAuthorityId + ' is ' + fhrsResponse.statusCodeValue
 
     if (fhrsResponse?.statusCode != OK) fhrsResponse
 
