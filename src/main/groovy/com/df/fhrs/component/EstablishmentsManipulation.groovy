@@ -75,7 +75,7 @@ class EstablishmentsManipulation {
       }
     }
 
-    log.info 'Rating percentage for the given establishments: ' + ratingPercentage
+    log.info "Rating percentage for the given establishments: $ratingPercentage"
     ratingPercentage
   }
 

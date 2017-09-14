@@ -61,7 +61,7 @@ class FhrsController {
    */
   @RequestMapping('/authorities/{localAuthorityId}/ratingsPercentage')
   def calculateFoodHygieneRatingPercentage(@PathVariable final int localAuthorityId) {
-    log.debug 'calculating food hygiene rating percentage for authority ' + localAuthorityId
+    log.debug "calculating food hygiene rating percentage for authority $localAuthorityId"
     fhrsService.calculateRatingPercentage localAuthorityId
   }
 }
