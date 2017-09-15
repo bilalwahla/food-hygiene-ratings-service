@@ -22,7 +22,6 @@ import com.df.fhrs.model.fhrs.response.Authorities
 import com.df.fhrs.model.fhrs.response.Establishments
 import com.df.fhrs.component.FhrsHeadersFactory
 import com.df.fhrs.model.fhrs.response.Ratings
-import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpEntity
 import org.springframework.http.ResponseEntity
@@ -38,7 +37,6 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR
  *
  * @author bilalwahla
  */
-@Slf4j
 @Service
 class FhrsService {
 
@@ -63,11 +61,7 @@ class FhrsService {
   def retrieveAllAuthorities() {
     HttpEntity<?> requestEntity = new HttpEntity<Object>(fhrsHeadersFactory.headers)
     URI requestUri = uriManipulation.createFhrsRequestUri fhrsProperties.basicAuthoritiesPath
-
-    log.debug "Calling FHRS API to retrieve basic authorities at ${requestUri.toString()}"
     ResponseEntity<Authorities> fhrsResponse = restTemplate.exchange requestUri, GET, requestEntity, Authorities
-    log.debug "FHRS response for retrieving basic authorities is ${fhrsResponse.statusCodeValue}"
-
     fhrsResponse
   }
 
@@ -77,11 +71,7 @@ class FhrsService {
   def retrieveAllRatings() {
     HttpEntity<?> requestEntity = new HttpEntity<Object>(fhrsHeadersFactory.headers)
     URI requestUri = uriManipulation.createFhrsRequestUri fhrsProperties.ratingsPath
-
-    log.debug "Calling FHRS API to retrieve ratings at ${requestUri.toString()}"
     ResponseEntity<Ratings> fhrsResponse = restTemplate.exchange requestUri, GET, requestEntity, Ratings
-    log.debug "FHRS response for retrieving ratings is ${fhrsResponse.statusCodeValue}"
-
     fhrsResponse
   }
 
@@ -93,10 +83,7 @@ class FhrsService {
     HttpEntity<?> requestEntity = new HttpEntity<Object>(fhrsHeadersFactory.headers)
     String searchPath = uriManipulation.populateSearchEstablishmentsByAuthorityPath localAuthorityId
     URI requestUri = uriManipulation.createFhrsRequestUri searchPath
-
-    log.debug "Calling FHRS API to retrieve establishments by authority $localAuthorityId at ${requestUri.toString()}"
     ResponseEntity<Establishments> fhrsResponse = restTemplate.exchange requestUri, GET, requestEntity, Establishments
-    log.debug "FHRS response to retrieving establishments by authority $localAuthorityId is ${fhrsResponse.statusCodeValue}"
 
     if (fhrsResponse?.statusCode != OK)
       return new ResponseEntity<Map<String, BigDecimal>>([:], INTERNAL_SERVER_ERROR)

@@ -14,8 +14,6 @@
 
 package com.df.fhrs.controller
 
-import com.df.fhrs.model.fhrs.response.Authorities
-import com.df.fhrs.model.fhrs.response.Ratings
 import com.df.fhrs.service.FhrsService
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
@@ -41,7 +39,6 @@ class FhrsController {
    */
   @RequestMapping('/authorities')
   def retrieveAuthorities() {
-    log.debug 'Retrieving authorities'
     fhrsService.retrieveAllAuthorities()
   }
 
@@ -51,7 +48,6 @@ class FhrsController {
    */
   @RequestMapping('/ratings')
   def retrieveRatings() {
-    log.debug 'Retrieving ratings'
     fhrsService.retrieveAllRatings()
   }
 
@@ -61,7 +57,6 @@ class FhrsController {
    */
   @RequestMapping('/authorities/{localAuthorityId}/ratingsPercentage')
   def calculateFoodHygieneRatingPercentage(@PathVariable final int localAuthorityId) {
-    log.debug "calculating food hygiene rating percentage for authority $localAuthorityId"
     fhrsService.calculateRatingPercentage localAuthorityId
   }
 }

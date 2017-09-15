@@ -18,7 +18,6 @@ import com.df.fhrs.model.fhrs.response.Establishments
 import com.df.fhrs.model.fhrs.response.Rating
 import com.df.fhrs.model.fhrs.response.Ratings
 import com.df.fhrs.service.FhrsService
-import groovy.util.logging.Slf4j
 import groovyx.gpars.GParsPool
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -34,7 +33,6 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR
  *
  * @author bilalwahla
  */
-@Slf4j
 @Component
 class EstablishmentsManipulation {
 
@@ -81,7 +79,6 @@ class EstablishmentsManipulation {
       }
     }
 
-    log.info "Rating percentage for the given establishments: $ratingPercentage"
     new ResponseEntity<Map<String, BigDecimal>>(ratingPercentage, OK)
   }
 
