@@ -21,9 +21,12 @@ import com.df.fhrs.service.FhrsService
 import groovy.util.logging.Slf4j
 import groovyx.gpars.GParsPool
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
 
 import static java.math.RoundingMode.FLOOR
+import static org.springframework.http.HttpStatus.OK
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR
 
 /**
  * This class contains methods to manipulate establishments data retrieved by applying different
@@ -57,8 +60,11 @@ class EstablishmentsManipulation {
   def calculateRatingPercentage(Establishments establishments) {
     def ratingPercentage = [:]
 
-    Ratings ratings = fhrsService.retrieveAllRatings()
+    def ratingsResponse = fhrsService.retrieveAllRatings()
+    if (ratingsResponse.statusCode != OK)
+      return new ResponseEntity<Map<String, BigDecimal>>(ratingPercentage, INTERNAL_SERVER_ERROR)
 
+    Ratings ratings = ratingsResponse.body
     GParsPool.withPool threadPoolSize, {
       boolean fhrsScheme = isFhrsScheme establishments.establishments.first().schemeType
       int totalEstablishments = establishments.establishments.size()
@@ -76,7 +82,7 @@ class EstablishmentsManipulation {
     }
 
     log.info "Rating percentage for the given establishments: $ratingPercentage"
-    ratingPercentage
+    new ResponseEntity<Map<String, BigDecimal>>(ratingPercentage, OK)
   }
 
   private static BigDecimal calculatePercentage(int found, int total) {
@@ -84,7 +90,7 @@ class EstablishmentsManipulation {
   }
 
   private static String createKey(String ratingKeyName) {
-    ratingKeyName.matches('(0|1|2|3|4|5).*') ? "$ratingKeyName$DIGIT_RATING_POSTFIX" : ratingKeyName
+    ratingKeyName.matches('([012345]).*') ? "$ratingKeyName$DIGIT_RATING_POSTFIX" : ratingKeyName
   }
 
   private static List<Rating> filteredRatings(List<Rating> ratings, boolean fhrsScheme) {

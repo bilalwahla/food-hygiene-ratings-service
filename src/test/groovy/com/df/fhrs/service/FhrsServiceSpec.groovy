@@ -29,6 +29,7 @@ import org.springframework.web.client.RestTemplate
 import spock.lang.Specification
 
 import static org.springframework.http.HttpStatus.OK
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR
 
 /**
  * Unit test specification for FhrsService service.
@@ -54,7 +55,7 @@ class FhrsServiceSpec extends Specification {
 
   def "should be able to retrieve all authorities"() {
     when:
-    Authorities authorities = fhrsService.retrieveAllAuthorities()
+    def response = fhrsService.retrieveAllAuthorities()
 
     then:
     1 * restTemplate.exchange(*_) >> new ResponseEntity<Authorities>(
@@ -66,15 +67,15 @@ class FhrsServiceSpec extends Specification {
         ] as Authorities,
         OK
     )
-    authorities.authorities.size() == 2
-    Authority authority = authorities.authorities.get(0)
+    response.body.authorities.size() == 2
+    Authority authority = response.body.authorities.get(0)
     authority.localAuthorityId == 1
     authority.name == 'A City'
   }
 
   def "should be able to retrieve all ratings"() {
     when:
-    Ratings ratings = fhrsService.retrieveAllRatings()
+    def response = fhrsService.retrieveAllRatings()
 
     then:
     1 * restTemplate.exchange(*_) >> new ResponseEntity<Ratings>(
@@ -86,8 +87,8 @@ class FhrsServiceSpec extends Specification {
         ] as Ratings,
         OK
     )
-    ratings.ratings.size() == 2
-    Rating rating = ratings.ratings.get(0)
+    response.body.ratings.size() == 2
+    Rating rating = response.body.ratings.get(0)
     rating.ratingId == 5
     rating.ratingName == '4'
     rating.ratingKeyName == '4'
@@ -98,7 +99,7 @@ class FhrsServiceSpec extends Specification {
     int localAuthorityId = 1
 
     when:
-    def ratingPercentage = fhrsService.calculateRatingPercentage localAuthorityId
+    def response = fhrsService.calculateRatingPercentage localAuthorityId
 
     then:
     1 * restTemplate.exchange(*_) >> new ResponseEntity<Establishments>(
@@ -109,11 +110,31 @@ class FhrsServiceSpec extends Specification {
         ] as Establishments,
         OK
     )
-    1 * establishmentsManipulation.calculateRatingPercentage(_) >> [
-        'Pass': 75.00, 'Improvement Required': 25.00
-    ]
-    ratingPercentage.get('Pass') == 75.00
-    ratingPercentage.get(('Improvement Required')) == 25.00
+    1 * establishmentsManipulation.calculateRatingPercentage(_) >> new ResponseEntity<Map<String, BigDecimal>>(
+        [
+            'Pass': 75.00, 'Improvement Required': 25.00
+        ],
+        OK
+    )
+    response.body.get('Pass') == 75.00
+    response.body.get(('Improvement Required')) == 25.00
+  }
+
+  def "should get an internal server error when there was a problem retrieving establishments from FHRS API"() {
+    given:
+    int localAuthorityId = 2
+
+    when:
+    def response = fhrsService.calculateRatingPercentage localAuthorityId
+
+    then:
+    1 * restTemplate.exchange(*_) >> new ResponseEntity<Establishments>(
+        [
+            establishments: []
+        ] as Establishments,
+        INTERNAL_SERVER_ERROR
+    )
+    response.statusCode == INTERNAL_SERVER_ERROR
   }
 
   def "should be able to calculate rating percentage for a FHRS authority"() {
@@ -121,7 +142,7 @@ class FhrsServiceSpec extends Specification {
     int localAuthorityId = 2
 
     when:
-    def ratingPercentage = fhrsService.calculateRatingPercentage localAuthorityId
+    def response = fhrsService.calculateRatingPercentage localAuthorityId
 
     then:
     1 * restTemplate.exchange(*_) >> new ResponseEntity<Establishments>(
@@ -132,21 +153,24 @@ class FhrsServiceSpec extends Specification {
         ] as Establishments,
         OK
     )
-    1 * establishmentsManipulation.calculateRatingPercentage(_) >> [
-        '5-star': 10.00,
-        '4-star': 10.00,
-        '3-star': 10.00,
-        '2-star': 10.00,
-        '1-star': 10.00,
-        '0-star': 00.00,
-        'AwaitingPublication': 00.00,
-        'AwaitingInspection': 19.50,
-        'Exempt': 30.50
-    ]
-    ratingPercentage.get('5-star') == 10.00
-    ratingPercentage.get(('AwaitingPublication')) == 00.00
-    ratingPercentage.get(('AwaitingInspection')) == 19.50
-    ratingPercentage.get(('Exempt')) == 30.50
+    1 * establishmentsManipulation.calculateRatingPercentage(_) >> new ResponseEntity<Map<String, BigDecimal>>(
+        [
+            '5-star': 10.00,
+            '4-star': 10.00,
+            '3-star': 10.00,
+            '2-star': 10.00,
+            '1-star': 10.00,
+            '0-star': 00.00,
+            'AwaitingPublication': 00.00,
+            'AwaitingInspection': 19.50,
+            'Exempt': 30.50
+        ],
+        OK
+    )
+    response.body.get('5-star') == 10.00
+    response.body.get(('AwaitingPublication')) == 00.00
+    response.body.get(('AwaitingInspection')) == 19.50
+    response.body.get(('Exempt')) == 30.50
   }
 
   def "should throw NoEstablishmentFoundException given an unknown authority"() {

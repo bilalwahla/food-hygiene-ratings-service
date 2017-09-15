@@ -40,7 +40,7 @@ class FhrsController {
    * @return a collection of authorities
    */
   @RequestMapping('/authorities')
-  Authorities retrieveAuthorities() {
+  def retrieveAuthorities() {
     log.debug 'Retrieving authorities'
     fhrsService.retrieveAllAuthorities()
   }
@@ -50,7 +50,7 @@ class FhrsController {
    * @return a collection of ratings
    */
   @RequestMapping('/ratings')
-  Ratings retrieveRatings() {
+  def retrieveRatings() {
     log.debug 'Retrieving ratings'
     fhrsService.retrieveAllRatings()
   }

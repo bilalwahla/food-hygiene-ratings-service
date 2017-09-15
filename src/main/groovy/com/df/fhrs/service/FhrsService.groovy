@@ -31,6 +31,7 @@ import org.springframework.web.client.RestTemplate
 
 import static org.springframework.http.HttpMethod.*
 import static org.springframework.http.HttpStatus.OK
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR
 
 /**
  * Service to communicate with FHRS API.
@@ -58,9 +59,8 @@ class FhrsService {
 
   /**
    * Makes a call to FHRS API to retrieve all authorities with basic authority information.
-   * @return authorities
    */
-  Authorities retrieveAllAuthorities() {
+  def retrieveAllAuthorities() {
     HttpEntity<?> requestEntity = new HttpEntity<Object>(fhrsHeadersFactory.headers)
     URI requestUri = uriManipulation.createFhrsRequestUri fhrsProperties.basicAuthoritiesPath
 
@@ -68,16 +68,13 @@ class FhrsService {
     ResponseEntity<Authorities> fhrsResponse = restTemplate.exchange requestUri, GET, requestEntity, Authorities
     log.debug "FHRS response for retrieving basic authorities is ${fhrsResponse.statusCodeValue}"
 
-    if (fhrsResponse?.statusCode != OK) fhrsResponse
-
-    fhrsResponse.body
+    fhrsResponse
   }
 
   /**
    * Makes a call to FHRS API to retrieve all ratings.
-   * @return
    */
-  Ratings retrieveAllRatings() {
+  def retrieveAllRatings() {
     HttpEntity<?> requestEntity = new HttpEntity<Object>(fhrsHeadersFactory.headers)
     URI requestUri = uriManipulation.createFhrsRequestUri fhrsProperties.ratingsPath
 
@@ -85,16 +82,12 @@ class FhrsService {
     ResponseEntity<Ratings> fhrsResponse = restTemplate.exchange requestUri, GET, requestEntity, Ratings
     log.debug "FHRS response for retrieving ratings is ${fhrsResponse.statusCodeValue}"
 
-    if (fhrsResponse?.statusCode != OK) fhrsResponse
-
-    fhrsResponse.body
+    fhrsResponse
   }
 
   /**
    * Makes a call to FHRS API to search for establishments by a given authority and calculates food
    * hygiene ratings percentage across that authority.
-   * @param localAuthorityId to search establishments by
-   * @return a map of ratings and their percentage
    */
   def calculateRatingPercentage(final int localAuthorityId) {
     HttpEntity<?> requestEntity = new HttpEntity<Object>(fhrsHeadersFactory.headers)
@@ -105,7 +98,8 @@ class FhrsService {
     ResponseEntity<Establishments> fhrsResponse = restTemplate.exchange requestUri, GET, requestEntity, Establishments
     log.debug "FHRS response to retrieving establishments by authority $localAuthorityId is ${fhrsResponse.statusCodeValue}"
 
-    if (fhrsResponse?.statusCode != OK) fhrsResponse
+    if (fhrsResponse?.statusCode != OK)
+      return new ResponseEntity<Map<String, BigDecimal>>([:], INTERNAL_SERVER_ERROR)
 
     if (!fhrsResponse?.body?.establishments) throw new NoEstablishmentFoundException(localAuthorityId)
 
