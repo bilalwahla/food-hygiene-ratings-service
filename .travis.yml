@@ -16,6 +16,6 @@ branches:
   only:
   - master
 script:
-- ./mvnw clean package docker:build
+- ./mvnw clean package
 after_success:
 - bash <(curl -s https://codecov.io/bash)
